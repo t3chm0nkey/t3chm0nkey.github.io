@@ -1,3 +1,5 @@
 var sceneEl = document.querySelector('a-scene');
-console.log(sceneEl);
+setInterval(function() {
+  console.log(sceneEl);
+}, 1000 / 60);
 
