@@ -1,4 +1,6 @@
 $("body").ready(function (){
+	setTimeout(function(){ alert("Hello"); }, 3000);
 	$("#vrControls").on( "trackpadtouchstart", function() {
 	alert("trackpad was hit")});
+	
 });
