@@ -1,0 +1,4 @@
+$("body").ready(function (){
+	$("#vrControls").on( "trackpaddown", function() {
+	alert("trackpad was hit")});
+});
