@@ -1,22 +1,279 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
-    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
-    <script src="https://aframe.io/releases/0.9.0/aframe.min.js"></script>
-    <script src="https://unpkg.com/aframe-aabb-collider-component@3.1.0/dist/aframe-aabb-collider-component.min.js"></script>
-    <script src="/Server.js"></script>
-    <script src="https://cdn.rawgit.com/jeromeetienne/AR.js/1.6.0/aframe/build/aframe-ar.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#0a0d14" />
+  <title>Shell Codex &amp; Mech Hangar // Tabletop System</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <!-- QR Code Scanner Library for In-Browser Camera Scanning -->
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 </head>
-<a-scene embedded arjs="debugUIEnabled: false;" physics="debug: true; gravity:0.0;" >
-    <a-box id="player1" class="paddle"static-body scale="0.1 0.1 0.3"position="-1 0 0" rotation="0 0 0" color="red"></a-box>
-    <a-box id="player2" class="paddle"static-body scale= "0.1 0.1 0.3"position="1 0 0" rotation="0 0 0" color="blue"></a-box>
-    <a-box id="ball" ball aabb-collider="objects: .paddle"position="0 0 0" scale="0.1 0.1 0.1" rotation="0 0 0" color="black"></a-box>
-    <a-plane id="ground" position="0 -.11 0" scale="2 2 0" rotation="-90 0 0"></a-plane>
-    <a-marker-camera preset='hiro'></a-marker-camera>
-</a-scene>
+<body>
+  <div class="container">
+    <!-- Top Bar Navigation -->
+    <header>
+      <div class="header-main">
+        <div class="brand">
+          <div class="brand-icon">⚡</div>
+          <div>
+            <h1>Shell Tactical System</h1>
+            <div class="subtitle">Modular Mech Codex &amp; Tabletop Companion</div>
+          </div>
+        </div>
+        
+        <!-- Mode Switcher Tabs -->
+        <nav class="mode-nav">
+          <button id="nav-codex-btn" class="nav-tab active">
+            📖 Shell Codex
+          </button>
+          <button id="nav-hangar-btn" class="nav-tab">
+            🛡️ Mech Hangar <span id="nav-mech-count" class="nav-pill">1</span>
+          </button>
+        </nav>
+      </div>
+    </header>
+
+    <!-- ========================================================= -->
+    <!-- MODE 1: SHELL CODEX (Database & QR Labels)                 -->
+    <!-- ========================================================= -->
+    <div id="codex-section">
+      <!-- Catalog Mode -->
+      <main id="catalog-view">
+        <div class="controls">
+          <div class="search-bar">
+            <input
+              type="text"
+              id="search-input"
+              class="search-input"
+              placeholder="Search shells by ID (e.g. B01), name, or ability..."
+              autocomplete="off"
+            />
+          </div>
+
+          <div class="category-tabs">
+            <button class="tab-btn active" data-cat="All">All Shells</button>
+            <button class="tab-btn" data-cat="Bodies">Bodies</button>
+            <button class="tab-btn" data-cat="Arms">Arms</button>
+            <button class="tab-btn" data-cat="Lowers">Lowers</button>
+            <button class="tab-btn" data-cat="Support">Support</button>
+          </div>
+        </div>
+
+        <div id="shells-grid" class="shells-grid">
+          <!-- Cards populated dynamically by app.js -->
+        </div>
+      </main>
+
+      <!-- Detail Mode (Deep Linked from QR scan or card click) -->
+      <section id="detail-view" class="detail-view" aria-live="polite">
+        <div class="detail-top-nav">
+          <button id="back-btn" class="back-btn">
+            <span>←</span> Back to Shell Archive
+          </button>
+          <!-- Quick Equip Button for the Active Mech -->
+          <div id="quick-equip-container" class="quick-equip-container">
+            <!-- Injected by app.js -->
+          </div>
+        </div>
+        <div id="detail-content">
+          <!-- Detail Card dynamically populated by app.js -->
+        </div>
+      </section>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- MODE 2: MECH HANGAR (Character Sheet & Tabletop Combat)    -->
+    <!-- ========================================================= -->
+    <section id="hangar-section" class="hangar-section" style="display: none;">
+      
+      <!-- Mech Roster Tab Bar -->
+      <div class="roster-bar">
+        <div id="roster-tabs" class="roster-tabs">
+          <!-- Populated by app.js -->
+        </div>
+        <button id="add-mech-btn" class="add-mech-btn" title="Deploy New Mech">
+          + New Mech
+        </button>
+      </div>
+
+      <!-- Empty Hangar State (0 Mechs) -->
+      <div id="empty-hangar-view" class="empty-hangar-view" style="display: none;">
+        <div class="empty-hangar-card">
+          <div class="empty-hangar-icon">🛡️</div>
+          <h2>Hangar Bay Empty</h2>
+          <p>No active mechs deployed. Ready for a fresh campaign or tabletop match.</p>
+          <button id="deploy-first-mech-btn" class="scan-camera-btn" style="margin-top: 1.25rem;">
+            + Deploy New Mech Frame
+          </button>
+        </div>
+      </div>
+
+      <!-- Active Mech Sheet -->
+      <div id="active-mech-sheet" class="active-mech-sheet">
+        <!-- Top Mech Info & Management -->
+        <div class="mech-header">
+          <div class="mech-title-group">
+            <input
+              type="text"
+              id="mech-name-input"
+              class="mech-name-input"
+              value="Unit-01: Vanguard"
+              title="Click to rename mech"
+            />
+            <span class="edit-hint">✎ click to rename</span>
+          </div>
+          <div class="mech-header-actions">
+            <button id="delete-mech-btn" class="danger-btn" title="Scrap this Mech">
+              Scrap Mech
+            </button>
+          </div>
+        </div>
+
+        <!-- Scanning & Quick-Add Toolbar -->
+        <div class="scan-toolbar">
+          <button id="open-camera-scanner-btn" class="scan-camera-btn">
+            📷 Scan Part via Camera
+          </button>
+          <div class="manual-add-box">
+            <input
+              type="text"
+              id="manual-id-input"
+              placeholder="Part ID (e.g. A01)"
+              maxlength="5"
+            />
+            <button id="manual-equip-btn" class="equip-btn">
+              Equip ID
+            </button>
+          </div>
+        </div>
+
+        <!-- Tabletop Combat Resource HUD (HP & Energy Tracker) -->
+        <div class="combat-hud">
+          <!-- HP Tracker -->
+          <div class="resource-card hp-card">
+            <div class="resource-header">
+              <span class="resource-title">Integrity (HP)</span>
+              <span class="resource-numbers">
+                <span id="hud-hp-current">0</span> / <span id="hud-hp-max">0</span>
+              </span>
+            </div>
+            <div class="progress-bar-bg">
+              <div id="hud-hp-bar" class="progress-bar-fill hp-bar-fill"></div>
+            </div>
+            <div class="tracker-controls">
+              <button class="step-btn" data-res="hp" data-val="-10">-10</button>
+              <button class="step-btn" data-res="hp" data-val="-1">-1</button>
+              <button class="step-btn" data-res="hp" data-val="1">+1</button>
+              <button class="step-btn" data-res="hp" data-val="10">+10</button>
+              <button class="reset-res-btn" data-res="hp" title="Repair to full">Full Repair</button>
+            </div>
+          </div>
+
+          <!-- Energy Tracker -->
+          <div class="resource-card energy-card">
+            <div class="resource-header">
+              <span class="resource-title">Core Energy</span>
+              <span class="resource-numbers">
+                <span id="hud-energy-current">0</span> / <span id="hud-energy-max">0</span>
+              </span>
+            </div>
+            <div class="progress-bar-bg">
+              <div id="hud-energy-bar" class="progress-bar-fill energy-bar-fill"></div>
+            </div>
+            <div class="tracker-controls">
+              <button class="step-btn" data-res="energy" data-val="-5">-5</button>
+              <button class="step-btn" data-res="energy" data-val="-1">-1</button>
+              <button class="step-btn" data-res="energy" data-val="1">+1</button>
+              <button class="step-btn" data-res="energy" data-val="5">+5</button>
+              <button class="reset-res-btn" data-res="energy" title="Recharge to full">Recharge</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Aggregated Combat Specs -->
+        <div class="section-title">Aggregated Combat Specifications</div>
+        <div id="mech-specs-matrix" class="stats-matrix">
+          <!-- Populated by app.js -->
+        </div>
+
+        <!-- Modular Slots (1 Body, 2 Arms, 1 Lowers, 1 Support) -->
+        <div class="section-title">Installed Shell Configuration (5 Slots)</div>
+        <div class="slots-grid">
+          <!-- Body Slot -->
+          <div class="slot-container" data-slot="body">
+            <div class="slot-badge badge-bodies">Body Frame (1/1)</div>
+            <div id="slot-body-content" class="slot-content"></div>
+          </div>
+
+          <!-- Left Arm Slot -->
+          <div class="slot-container" data-slot="armLeft">
+            <div class="slot-badge badge-arms">Left Arm (1/2)</div>
+            <div id="slot-armLeft-content" class="slot-content"></div>
+          </div>
+
+          <!-- Right Arm Slot -->
+          <div class="slot-container" data-slot="armRight">
+            <div class="slot-badge badge-arms">Right Arm (2/2)</div>
+            <div id="slot-armRight-content" class="slot-content"></div>
+          </div>
+
+          <!-- Lowers Slot -->
+          <div class="slot-container" data-slot="lowers">
+            <div class="slot-badge badge-lowers">Lowers Base (1/1)</div>
+            <div id="slot-lowers-content" class="slot-content"></div>
+          </div>
+
+          <!-- Support Slot -->
+          <div class="slot-container" data-slot="support">
+            <div class="slot-badge badge-support">Support Unit (1/1)</div>
+            <div id="slot-support-content" class="slot-content"></div>
+          </div>
+        </div>
+
+        <!-- Active Ability Deck -->
+        <div class="section-title">Combat Action &amp; Spell Deck</div>
+        <div id="mech-abilities-deck" class="abilities-list">
+          <!-- Populated by app.js -->
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- CAMERA SCANNER MODAL                                       -->
+    <!-- ========================================================= -->
+    <div id="scanner-modal" class="modal-overlay" style="display: none;">
+      <div class="modal-box">
+        <div class="modal-header">
+          <h3>Scan Part QR Code</h3>
+          <button id="close-scanner-btn" class="close-modal-btn">&times;</button>
+        </div>
+        <p class="modal-hint">Point your camera at a QR code printed on a toy or screen.</p>
+        
+        <!-- Slot assignment selector -->
+        <div class="target-slot-select">
+          <label for="scanner-target-slot">Target Slot:</label>
+          <select id="scanner-target-slot">
+            <option value="auto">Auto-Detect by Part Category</option>
+            <option value="body">Body</option>
+            <option value="armLeft">Left Arm</option>
+            <option value="armRight">Right Arm</option>
+            <option value="lowers">Lowers</option>
+            <option value="support">Support</option>
+          </select>
+        </div>
+
+        <div id="qr-reader" style="width: 100%; border-radius: 8px; overflow: hidden;"></div>
+        <div id="scan-feedback" class="scan-feedback"></div>
+      </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="toast"></div>
+
+  </div>
+
+  <script src="js/app.js"></script>
 </body>
 </html>

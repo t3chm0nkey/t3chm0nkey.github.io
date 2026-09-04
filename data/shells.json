@@ -1,0 +1,234 @@
+[
+  {
+    "id": "B01",
+    "name": "Dreadnought Core",
+    "category": "Bodies",
+    "subtype": "Heavy Plated Chassis",
+    "rarity": "Rare",
+    "stats": {
+      "hp": 240,
+      "armor": 45,
+      "energy": 60,
+      "speed": 15
+    },
+    "abilities": [
+      {
+        "name": "Bulwark Protocol",
+        "cost": "20 Energy",
+        "type": "Active",
+        "description": "Reinforces plating, absorbing the next 50 incoming damage for 2 turns."
+      },
+      {
+        "name": "Dense Mass",
+        "cost": "Passive",
+        "type": "Passive",
+        "description": "Immune to pushback and stagger effects from lighter attacks."
+      }
+    ],
+    "tags": ["Armored", "Heavy", "Anchor"],
+    "flavorText": "Engineered for front-line attrition, the Dreadnought Core sacrifices velocity for sheer survivability."
+  },
+  {
+    "id": "B02",
+    "name": "Phantom Skiff",
+    "category": "Bodies",
+    "subtype": "Lightweight Stealth Chassis",
+    "rarity": "Epic",
+    "stats": {
+      "hp": 130,
+      "armor": 15,
+      "energy": 110,
+      "speed": 40
+    },
+    "abilities": [
+      {
+        "name": "Phase Shift",
+        "cost": "35 Energy",
+        "type": "Active",
+        "description": "Shifts shell into a semi-corporeal state, gaining 50% evasion until the start of next turn."
+      },
+      {
+        "name": "Thermal Cloak",
+        "cost": "Passive",
+        "type": "Passive",
+        "description": "Cannot be targeted by lock-on abilities while above 50% energy."
+      }
+    ],
+    "tags": ["Agile", "Stealth", "Energy"],
+    "flavorText": "Crafted from composite metamaterials that scatter optical and sensor signatures."
+  },
+  {
+    "id": "A01",
+    "name": "Siegebreaker Arm",
+    "category": "Arms",
+    "subtype": "Kinetic Impact Striker",
+    "rarity": "Uncommon",
+    "stats": {
+      "attack": 55,
+      "range": 1,
+      "accuracy": 85,
+      "energy": -10
+    },
+    "abilities": [
+      {
+        "name": "Tectonic Impact",
+        "cost": "15 Energy",
+        "type": "Attack",
+        "description": "Delivers a hydraulic slam dealing 70 blunt damage and shattering 10 armor."
+      },
+      {
+        "name": "Hydraulic Recoil",
+        "cost": "Passive",
+        "type": "Passive",
+        "description": "Melee counterattacks deal +15% bonus impact damage."
+      }
+    ],
+    "tags": ["Kinetic", "Melee", "Armor-Break"],
+    "flavorText": "Reinforced piston-driven arm built to breach bunker doors and heavy hull plating."
+  },
+  {
+    "id": "A02",
+    "name": "Arc Plasma Lance",
+    "category": "Arms",
+    "subtype": "Directed Energy Emitter",
+    "rarity": "Rare",
+    "stats": {
+      "attack": 48,
+      "range": 4,
+      "accuracy": 92,
+      "energy": -25
+    },
+    "abilities": [
+      {
+        "name": "Superheated Beam",
+        "cost": "30 Energy",
+        "type": "Spell / Skill",
+        "description": "Fires a searing beam penetrating all enemies in a 4-tile line, inflicting Burn."
+      },
+      {
+        "name": "Capacitor Vent",
+        "cost": "10 Energy",
+        "type": "Utility",
+        "description": "Vents residual heat to clear status effects and blind adjacent foes."
+      }
+    ],
+    "tags": ["Energy", "Ranged", "Piercing", "Burn"],
+    "flavorText": "Focuses unstable plasma into an ultra-dense spear capable of melting reinforced alloy."
+  },
+  {
+    "id": "L01",
+    "name": "Centipede Track Base",
+    "category": "Lowers",
+    "subtype": "All-Terrain Heavy Treads",
+    "rarity": "Common",
+    "stats": {
+      "mobility": 20,
+      "traction": 95,
+      "stability": 90,
+      "armor": 25
+    },
+    "abilities": [
+      {
+        "name": "Anchor Stance",
+        "cost": "10 Energy",
+        "type": "Stance",
+        "description": "Locks magnetic clamps into terrain, preventing displacement and boosting firing accuracy by 20%."
+      },
+      {
+        "name": "Trench Grinder",
+        "cost": "Passive",
+        "type": "Passive",
+        "description": "Ignores movement penalties on rough, ruined, or toxic terrain."
+      }
+    ],
+    "tags": ["Traction", "Ground", "Resilient"],
+    "flavorText": "Segmented steel treads that crawl through cratered moonscapes and mud with ease."
+  },
+  {
+    "id": "L02",
+    "name": "Vector Hover Rig",
+    "category": "Lowers",
+    "subtype": "Twin Ion Propulsion Legs",
+    "rarity": "Rare",
+    "stats": {
+      "mobility": 45,
+      "traction": 60,
+      "stability": 70,
+      "armor": 10
+    },
+    "abilities": [
+      {
+        "name": "Micro-Burst Dash",
+        "cost": "25 Energy",
+        "type": "Maneuver",
+        "description": "Instantly teleports / dashes 3 tiles in any direction, breaking free from locks."
+      },
+      {
+        "name": "Low-Altitude Hover",
+        "cost": "Passive",
+        "type": "Passive",
+        "description": "Glides cleanly over water, acid pools, and floor traps."
+      }
+    ],
+    "tags": ["Hover", "High-Mobility", "Evasive"],
+    "flavorText": "Twin gimballed ion repulsors granting unmatched lateral speed and jump elevation."
+  },
+  {
+    "id": "S01",
+    "name": "Nanite Hive Pouch",
+    "category": "Support",
+    "subtype": "Automated Repair Module",
+    "rarity": "Epic",
+    "stats": {
+      "repairRate": 30,
+      "shieldRegen": 15,
+      "energy": 20,
+      "weight": 8
+    },
+    "abilities": [
+      {
+        "name": "Cellular Reconstitution",
+        "cost": "30 Energy",
+        "type": "Spell / Repair",
+        "description": "Deploys a cloud of nanobots to restore 40 HP to this shell or an allied construct."
+      },
+      {
+        "name": "Scrap Scavenger",
+        "cost": "Passive",
+        "type": "Passive",
+        "description": "Recover 10 Energy and 10 HP whenever an enemy construct within 3 tiles is destroyed."
+      }
+    ],
+    "tags": ["Repair", "Nanites", "Sustain"],
+    "flavorText": "A miniature bioreactor housing millions of programmed nanobots ready to weld armor mid-combat."
+  },
+  {
+    "id": "S02",
+    "name": "Chrono-Aegis Projector",
+    "category": "Support",
+    "subtype": "Spatial Distortion Matrix",
+    "rarity": "Legendary",
+    "stats": {
+      "shieldHp": 80,
+      "distortion": 35,
+      "energy": 40,
+      "weight": 12
+    },
+    "abilities": [
+      {
+        "name": "Temporal Stasis Ward",
+        "cost": "45 Energy",
+        "type": "Spell / Barrier",
+        "description": "Places a temporal field around the shell for 1 turn; delayed projectile attacks freeze in mid-air."
+      },
+      {
+        "name": "Chrono-Reversion",
+        "cost": "Passive",
+        "type": "Passive",
+        "description": "Once per battle, on fatal damage, rewinds shell state to 25% HP and purges debuffs."
+      }
+    ],
+    "tags": ["Barrier", "Temporal", "Emergency"],
+    "flavorText": "An experimental field generator that bends the local fabric of spacetime to deter fatal strikes."
+  }
+]
